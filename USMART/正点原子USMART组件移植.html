@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正点原子USMART组件移植</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><p></p><div class="toc"><h3>文章目录</h3><ul><ul><li><a href="#Cube_4">一、打开Cube，建立工程</a></li><li><a href="#_10">二、系统配置</a></li><li><a href="#IO_18">三、配置测试IO</a></li><li><a href="#_Clock_Configuration_21">四、在 Clock Configuration中:</a></li><li><a href="#_24">五、工程输出配置</a></li><li><a href="#_26">六、开始移植</a></li><li><a href="#_40">七、组件分析</a></li></ul></ul></div><br>
+MCU：正点原子阿波罗开发板<br>
+IDE：  MDK-ARM V5 +STM32CubeMX5.2.2<p></p>
+<h2><a id="Cube_4"></a>一、打开Cube，建立工程</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190412152759192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+点击ACCESS project from MCU<br>
+然后选择芯片类型<br>
+<img src="https://img-blog.csdnimg.cn/20190822165821130.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="_10"></a>二、系统配置</h2>
+<p><strong>在 Pinout&amp;Configuration—System Core中:</strong><br>
+设置时钟<strong>RCC</strong>的<strong>HSE</strong>（外部高速时钟）为晶振模式：<br>
+<strong>Crystal/ceramic Resonator</strong><br>
+设置系统<strong>SYS</strong>的<strong>Debug</strong>为<strong>Serial Wire(SWD调试)</strong><br>
+<strong>使能串口1</strong></p>
+<h2><a id="IO_18"></a>三、配置测试IO</h2>
+<p>这里选取板子上的LED1（PB1）<br>
+<img src="https://img-blog.csdnimg.cn/20190822170600365.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="_Clock_Configuration_21"></a>四、在 Clock Configuration中:</h2>
+<p>配置时钟为180 Mhz。<br>
+<img src="https://img-blog.csdnimg.cn/20190822170659875.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="_24"></a>五、工程输出配置</h2>
+<p>略</p>
+<h2><a id="_26"></a>六、开始移植</h2>
+<p>将移植文件复制到工程文件夹中，打开工程，并新建 USMART 组，添加USMART 组件代码，同时把 USMART文件夹添加到头文件包含路径<br>
+<img src="https://img-blog.csdnimg.cn/20190822172956647.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+然后在main.c中包含usmart.h头文件，加入usmart_dev.init(90)初始化<br>
+<img src="https://img-blog.csdnimg.cn/20190823103041666.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+再在stm32f4xx_it.c中的USART1_IRQHandler函数添加Usmart_Rev_Pro()即可<br>
+<img src="https://img-blog.csdnimg.cn/20190823103145930.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+编译报错时将config文件的宏定义去注释就可以了<br>
+将hex文件烧录进板子<br>
+<strong>测试结果如下</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190823102824883.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="_40"></a>七、组件分析</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190823104334717.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+usmart.c负责与外部互交等。</p>
+<p>usmat_str.c主要负责命令和参数解析。</p>
+<p>usmart_config.c主要由用户添加需要由usmart管理的函数。</p>
+<p>usmart.h和usmart_str.h是两个头文件，其中usmart.h里面含有几个用户配置宏定义，可以用来配置usmart的功能及总参数长度(直接和SRAM占用钩)、是否使能定时器扫描、是否使用读写函数等。</p>
+<p>用户在使用过程中只需要在usmart_config.c中按照如下图片添加即可<br>
+<img src="https://img-blog.csdnimg.cn/20190823104631902.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyOTY3MDA4,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+USMART有7个系统命令:<br>
+?:      获取帮助信息<br>
+help:   获取帮助信息<br>
+list:   可用的函数列表<br>
+id:     可用函数的ID列表<br>
+hex:    参数16进制显示,后跟空格+数字即执行进制转换<br>
+dec:    参数10进制显示,后跟空格+数字即执行进制转换<br>
+runtime 1,开启函数运行计时;0,关闭函数运行计时;</p>
+<p><a href="https://github.com/Xiamotir/USMART">Git库usmart组件</a><br>
+<a href="https://download.csdn.net/download/qq_42967008/11598870">CSDN下载</a></p>
+</div>
+</body>
+
+</html>

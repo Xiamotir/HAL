@@ -1,0 +1,9 @@
+gizwitsled\datapointtools.o: ..\Utils\dataPointTools.c
+gizwitsled\datapointtools.o: ..\Utils\dataPointTools.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\stdint.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\stdio.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\stdlib.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\string.h
+gizwitsled\datapointtools.o: ..\Utils\common.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\stdbool.h
+gizwitsled\datapointtools.o: D:\MDK5\ARM\ARMCC\Bin\..\include\ctype.h
